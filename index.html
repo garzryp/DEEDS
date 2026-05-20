@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEEDS</title>
+    <style>
+        :root {
+            --nav-bg: #0A2540;
+            --body-bg: #F4F6F8;
+            --card-bg: #FFFFFF;
+            --text-dark: #333333;
+            --text-muted: #777777;
+            
+            /* Timetable Colors */
+            --color-pastoral: #FFE3F1;
+            --color-history: #D4D7FF;
+            --color-pe: #FFE5D4;
+            --color-math: #D4ECFF;
+            --color-robotics: #FFF9D4;
+            --color-science: #D4FCD4;
+            --color-english: #D4FFE9;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--body-bg);
+            color: var(--text-dark);
+            padding-bottom: 40px;
+        }
+
+        /* --- NAVBAR --- */
+        .navbar {
+            background-color: var(--nav-bg);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            height: 60px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .nav-icons li {
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .nav-icons li:hover {
+            opacity: 1;
+        }
+
+        .nav-icons icon {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            background-color: #ccc;
+            object-fit: cover;
+        }
+
+        .notification-badge {
+            background-color: #E53935;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* --- MAIN CONTAINER --- */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .welcome-header {
+            margin-bottom: 5px;
+            font-weight: normal;
+            font-size: 24px;
+        }
+        
+        .welcome-header strong {
+            font-weight: bold;
+        }
+
+        .day-indicator {
+            color: var(--text-muted);
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- TIMETABLE ROW --- */
+        .timetable-grid {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .period-card {
+            background-color: var(--card-bg);
+            border-radius: 4px;
+            padding: 10px;
+            font-size: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 110px;
+        }
+
+        .period-header {
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 2px;
+        }
+
+        .period-time {
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
+        .period-subject {
+            font-weight: bold;
+            color: #0d47a1;
+            margin-bottom: 4px;
+            font-size: 11px;
+        }
+
+        .period-meta {
+            color: #333;
+            font-size: 11px;
+            line-height: 1.3;
+        }
+
+        /* --- MAIN LAYOUT (2 COLUMNS) --- */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 2.5fr 1fr;
+            gap: 25px;
+        }
+
+        /* Left Side: Grids and Banners */
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .shortcut-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+        }
+
+        .shortcut-card {
+            background-size: cover;
+            background-position: center;
+            height: 110px;
+            border-radius: 4px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 13px;
+            padding-bottom: 10px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        /* Fallback background colors for shortcuts simulating images */
+        .sc-library { background-color: #1a237e; }
+        .sc-sport { background-color: #e65100; }
+        .sc-music { background-color: #3e2723; }
+        .sc-drama { background-color: #006064; }
+        .sc-camps { background-color: #1b5e20; }
+        .sc-sustain { background-color: #4caf50; }
+        .sc-counsel { background-color: #880e4f; }
+        .sc-exams { background-color: #004d40; }
+        .sc-enrich { background-color: #33691e; }
+        .sc-info { background-color: #01579b; }
+        .sc-textbooks { background-color: #e65100; }
+        .sc-help { background-color: #ffb300; color: #333; text-shadow: none; }
+
+        .banner-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .banner {
+            height: 70px;
+            border-radius: 4px;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 18px;
+            font-weight: 300;
+            cursor: pointer;
+        }
+
+        .banner-principal {
+            background: linear-gradient(135deg, #2e7d32, #1b5e20);
+        }
+
+        .banner-senior {
+            background: linear-gradient(135deg, #0d47a1, #1a237e);
+        }
+
+        .promo-banner {
+            background: linear-gradient(135deg, #1a237e, #4a148c);
+            height: 140px;
+            border-radius: 4px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 40px;
+        }
+
+        /* Right Side: Side panels */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .panel {
+            background-color: var(--card-bg);
+            border-radius: 4px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .panel-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .panel-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 8px 0;
+        }
+
+        .date-sub-header {
+            color: #0d47a1;
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        /* --- SPECIFIC ASSIGNMENTS FOR GRAPHICS CLONES --- */
+        .timetable-grid .period-card:nth-child(1) { background-color: var(--color-pastoral); }
+        .timetable-grid .period-card:nth-child(2) { background-color: var(--color-history); }
+        .timetable-grid .period-card:nth-child(3) { background-color: var(--color-pe); }
+        .timetable-grid .period-card:nth-child(4) { background-color: var(--color-pe); }
+        .timetable-grid .period-card:nth-child(5) { background-color: var(--color-math); }
+        .timetable-grid .period-card:nth-child(6) { background-color: var(--color-math); }
+        .timetable-grid .period-card:nth-child(7) { background-color: var(--color-robotics); }
+        .timetable-grid .period-card:nth-child(8) { background-color: var(--color-science); }
+        .timetable-grid .period-card:nth-child(9) { background-color: var(--color-english); }
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <div class="menu-icon">&#9776;</div>
+            <div class="logo">&#10018; DEEDS</div>
+        </div>
+        <ul class="nav-icons">
+            <li><icon>&#128269;</icon>QR Code</li>
+            <li><icon>&#127891;</icon>Classes</li>
+            <li><icon>&#128101;</icon>Groups</li>
+            <li><icon>&#128197;</icon>Due Work</li>
+            <li><icon>&#128336;</icon>Timetable</li>
+            <li><icon>&#128198;</icon>Calendar</li>
+            <li><icon>&#128240;</icon>News</li>
+            <li><icon>&#128231;</icon>Webmail</li>
+            <li><icon>&#128200;</icon>Grades</li>
+            <li><icon>&#129513;</icon>Canva</li>
+            <li><icon>&#128187;</icon>EP</li>
+            <li><icon>&#9881;</icon>Health</li>
+            <li><icon>&#128249;</icon>Zoom</li>
+        </ul>
+        <div class="nav-right">
+            <span class="notification-badge">3</span>
+            <div style="width: 32px; height: 32px; border-radius: 50%; background-color: #fff; overflow:hidden;">
+                <svg viewBox="0 0 32 32" fill="#777"><path d="M16 4a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm0 14c-6.63 0-12 5.37-12 12h24c0-6.63-5.37-12-12-12z"/></svg>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="welcome-header">Good Afternoon, <strong>Clement Tsui</strong></h1>
+        <div class="day-indicator">Day 3</div>
+
+        <div class="timetable-grid">
+            <div class="period-card">
+                <div>
+                    <div class="period-header">Pastoral</div>
+                    <div class="period-time">8:30am–8:44am</div>
+                </div>
+                <div>
+                    <div class="period-subject">House - Robinson Tutor Group</div>
+                    <div class="period-meta">-TROB-4<br>W226</div>
+                </div>
+            </div>
+            <div class="period-card">
+                <div>
+                    <div class="period-header">Period 1</div>
+                    <div class="period-time">8:45am–9:24am</div>
+                </div>
+                <div>
+                    <div class="period-subject">Yr 9 History</div>
+                    <div class="period-meta">-09HST-8<br>M34</div>
+                </div>
+            </div>
+            <div class="period-card">
+                <div>
+                    <div class="period-header">Period 2</div>
+                    <div class="period-time">9:25am–10:04am</div>
+                </div>
+                <div>
+                    <div class="period-subject">Yr 9 Physical Education</div>
+                    <div class="period-meta">-09PE-15<br>GY3</div>
+                </div>
+            </div>
+            <div class="period-card">
+                <div>
+                    <div class="period-header">Period 3</div>
+                    <div class="period-time">10:05am–10:44am</div>
+                </div>
+                <div>
+                    <div class="period-subject">Yr 9 Physical Education</div>
+                    <div class="period-meta">-09PE-15<br>GY3</div>
+                </div>
+            </div>
+            <div class="period-card">
+                <div>
+                    <div class="period-header">Period 4</div>
+                    <div class="period-time">11:10am–11:49am</div>
+                </div>
+                <div>
+                    <div class="period-subject">Yr 9 Mathematics Advanced</div>
+                    <div class="period-meta">-09MAA-11<br>W217</div>
+                </div>
+            </div>
+            <div class="period-card">
+                <div>
+                    <div class="period-header">Period 5</div>
+                    <div class="period-time">11:50am–12:29pm</div>
+                </div>
+                <div>
+                    <div class="period-subject">Yr 9 Mathematics Advanced</div>
+                    <div class="period-meta">-09MAA-11<br>W217</div>
+                </div>
+            </div>
+            <div class="period-card">
+                <div>
+                    <div class="period-header">Period 6</div>
+                    <div class="period-time">1:25pm–2:04pm</div>
+                </div>
+                <div>
+                    <div class="period-subject">Yr 9 Robotics Showdown</div>
+                    <div class="period-meta">-09IROB-4<br>W215</div>
+                </div>
+            </div>
+            <div class="period-card">
+                <div>
+                    <div class="period-header">Period 7</div>
+                    <div class="period-time">2:05pm–2:44pm</div>
+                </div>
+                <div>
+                    <div class="period-subject">Biological & Chemical Science</div>
+                    <div class="period-meta">-09SBC-5<br>W115</div>
+                </div>
+            </div>
+            <div class="period-card">
+                <div>
+                    <div class="period-header">Period 8</div>
+                    <div class="period-time">2:45pm–3:24pm</div>
+                </div>
+                <div>
+                    <div class="period-subject">Yr 9 English</div>
+                    <div class="period-meta">-09ENG-16<br>M44</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-layout">
+            
+            <div class="left-column">
+                <div class="shortcut-grid">
+                    <div class="shortcut-card sc-library">Library</div>
+                    <div class="shortcut-card sc-sport">Sport</div>
+                    <div class="shortcut-card sc-music">Music</div>
+                    <div class="shortcut-card sc-drama">Drama</div>
+                    <div class="shortcut-card sc-camps">Camps & Trips</div>
+                    <div class="shortcut-card sc-sustain">Sustainability</div>
+                    
+                    <div class="shortcut-card sc-counsel">Counselling</div>
+                    <div class="shortcut-card sc-exams">Exams & Tests</div>
+                    <div class="shortcut-card sc-enrich">Enrichment Program</div>
+                    <div class="shortcut-card sc-info">School Information</div>
+                    <div class="shortcut-card sc-textbooks">Textbooks</div>
+                    <div class="shortcut-card sc-help">DEEDS Help</div>
+                </div>
+
+                <div class="banner-row">
+                    <div class="banner banner-principal">From the Principal</div>
+                    <div class="banner banner-senior">Senior School</div>
+                </div>
+
+                <div class="promo-banner">
+                    <h2 style="font-size: 28px; font-style: italic; font-weight: 300;">Celebrating 140 Years</h2>
+                    <p style="font-size: 12px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px;">Camberwell Grammar School</p>
+                </div>
+            </div>
+
+            <div class="right-column">
+                <div class="panel">
+                    <div class="panel-title">Cafeteria</div>
+                    <div class="date-sub-header">Wednesday 20 May 2026</div>
+                    <div class="panel-row" style="color: var(--text-muted);">
+                        <span>all-day</span>
+                        <span style="color: #E53935;">&#9679; Today's Menu</span>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">Your Variations</div>
+                    <div class="date-sub-header">Wednesday 20 May 2026</div>
+                    <div class="panel-row" style="font-weight: bold; border-bottom: 1px solid #eee; font-size: 11px;">
+                        <span>Time</span>
+                        <span>Subject</span>
+                        <span>Room/Area</span>
+                    </div>
+                    <div class="panel-row" style="color: var(--text-muted); justify-content: center; padding: 20px 0;">
+                        No variations for today
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
